@@ -21,11 +21,11 @@ Jingwen Gu, advice_threads
 
 ## What This Does
 
-<!-- Three or four sentences. Which corpus you picked, and the kinds of
-     questions your system answers. Write it for someone who has never seen
-     this repo.
-
-     Milestone 5. -->
+This is a RAG Q&A system over a advice threads corpus. Each thread is a `THREAD:` title followed by 2-5
+replies with vote counts. A user asks a plain-language question — for
+example, "How much RAM should a CS student's laptop have?" — and the
+system retrieves the most relevant threads. The system will refuse with "I don't have
+enough information about that" for not covered qusstions.
 
 ## Chunking Strategy
 
@@ -172,19 +172,22 @@ The gap is 0.307, with no overlap. I would keep the original 0.6.
 
 ## How I Used AI
 
-<!-- Two specific moments. For each: what you asked for, what came back, and
-     what you changed about it.
+**1. Why crashed during indexing? **
+My screen got frozen (crashed) while running `python app.py index` for the first time, I asked Claude and it told me some fix on the code level.
+All of them failed, and suddenly found my storage and memory were both almost full, and the index needs lots of memory to move forward, the python process will crash if not enough space. 
+I closed all unnecessary webpages and apps to free as much memory as possible and emptied my trash. Finally, it worked perfectly. 
 
-     "I asked Claude to write the chunking function from my notes. It ignored
-     the overlap, so I added that myself" is the level of detail we're after.
-     "I used AI to help me code" is not.
+**2. Write a new chunking strategy**
 
-     Milestone 5. -->
+For milestone 3, I asked Claude to write a new chunking strategy,
+and it suggested splitting each thread by individual reply with 100
+characters of overlap. I read the threads and saw that reply 3 in
+`thread_bike_commute.txt` says "Both true," which only makes sense in the
+context of replies 1 and 2. I changed the strategy to keep each whole
+thread as one chunk and dropped the overlap entirely, because `THREAD:`
+is already a natural boundary. The result went from 26 chunks (with a
+2-character fragment) to 23 complete threads.
 
-
-**1.**
-
-**2.**
 
 <!-- ── Stretch features ─────────────────────────────────────────────────────
      Doing one? Say so here BEFORE you start. A feature this README never
