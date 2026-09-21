@@ -1,6 +1,6 @@
 # The Unofficial Guide
 
-<!-- Replace this line with your name and which corpus you picked. -->
+Jingwen Gu, advice_threads
 
 > **This file is your submission.** Fill it in as you go — most sections get
 > written during the milestone that produces them, not at the end.
@@ -139,30 +139,36 @@ Empty office hours is the biggest unused resource here and I say that having was
 
 ## Sample Answer
 
-<!-- One complete question and answer, pasted as text, with the source line
-     visible. Milestone 4. -->
-
-**Question:**
+**Question:** How much RAM should a CS student's laptop have?
 
 **Answer:**
 
 ```
+A CS student's laptop should have 16GB of RAM. (Source: thread_laptop_specs.txt)
+
+Sources retrieved: thread_first_gen.txt, thread_laptop_specs.txt,
+thread_laundry_timing.txt, thread_pass_fail.txt, thread_printing.txt
 ```
 
-**My relevance cutoff:**
+**My relevance cutoff: 0.60**
 
-<!-- The number you set in config.py, and how you got there.
-
-     You ran five questions your corpus covers and the five in OUT_OF_SCOPE
-     that it clearly doesn't, and wrote down the best distance for each. What
-     did those two groups look like? Where was the gap? Put the actual numbers
-     here — the table below wants all ten rows.
-
-     Milestone 4. -->
+The two groups separated cleanly with no overlap:
 
 | Question | In corpus? | Best distance |
 |---|---|---|
-|  |  |  |
+| How much RAM should a CS student's laptop have? | yes | 0.198 |
+| When is laundry actually free in the dorms? | yes | 0.328 |
+| When should I start looking for a summer internship? | yes | 0.262 |
+| When is the deadline to declare pass/fail? | yes | 0.521 |
+| What footwear do I need for a first winter here? | yes | 0.475 |
+| What is the capital of Mongolia? | no | 0.948 |
+| How do I change the oil in a diesel engine? | no | 0.930 |
+| Who won the 1994 World Cup? | no | 0.952 |
+| What is the recommended dosage of ibuprofen? | no | 0.828 |
+| How do I write a for loop in Rust? | no | 0.871 |
+
+The in-scope group ranged 0.198–0.521; and 0.828-0.952 for the out-of-scope group. 
+The gap is 0.307, with no overlap. I would keep the original 0.6.
 
 ## How I Used AI
 
@@ -174,6 +180,7 @@ Empty office hours is the biggest unused resource here and I say that having was
      "I used AI to help me code" is not.
 
      Milestone 5. -->
+
 
 **1.**
 
