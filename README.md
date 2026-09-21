@@ -172,7 +172,8 @@ The gap is 0.307, with no overlap. I would keep the original 0.6.
 
 ## How I Used AI
 
-**1. Why crashed during indexing? **
+**1. Why crashed during indexing?**
+
 My screen got frozen (crashed) while running `python app.py index` for the first time, I asked Claude and it told me some fix on the code level.
 All of them failed, and suddenly found my storage and memory were both almost full, and the index needs lots of memory to move forward, the python process will crash if not enough space. 
 I closed all unnecessary webpages and apps to free as much memory as possible and emptied my trash. Finally, it worked perfectly. 
