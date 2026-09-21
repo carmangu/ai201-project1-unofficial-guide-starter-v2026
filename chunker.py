@@ -97,7 +97,75 @@ def split_documents(documents: list[Document]) -> list[Chunk]:
       - Would splitting on paragraph breaks keep more thoughts intact than
         splitting on a character count?
     """
-    return fallback_split(documents)
+import re
+
+# ... existing imports ...
+
+def split_documents(documents: list[Document]) -> list[Chunk]:
+    """
+    Split advice_threads documents.
+
+    Decision (Milestone 3 for advice_threads):
+      - Every document is one THREAD with 2-5 replies, all under 800 chars.
+      - The starter's 800-char window with 120-char overlap produces a
+        redundant tail chunk for every thread over 680 chars (3 of 23
+        threads), including a 2-char fragment ("t."). No overlap is
+        needed because THREAD boundaries are natural boundaries.
+      - Strategy: one thread = one chunk. If a thread exceeds 800 chars
+        (none currently do), split on `--- reply N ---` boundaries and
+        prefix every sub-chunk with the THREAD title so it stays
+        self-contained.
+    """
+    MAX_CHARS = 800
+    chunks: list[Chunk] = []
+    for doc in documents:
+        text = doc.text.strip()
+        if not text:
+            continue
+
+        # Short thread: one chunk, no overlap needed
+        if len(text) <= MAX_CHARS:
+            chunks.append(Chunk(
+                text=text,
+                source=doc.source,
+                index=0,
+                produced_by="chunker.py::split_documents",
+            ))
+            continue
+
+        # Long thread: split on reply boundaries, keep THREAD title as prefix
+        title_match = re.match(r"^THREAD:\s*(.+)", text)
+        title = title_match.group(1).strip() if title_match else "untitled"
+        header = f"THREAD: {title}"
+
+        parts = re.split(r"\n(?=--- reply \d+)", text)
+        replies = parts[1:]
+
+        current = header
+        index = 0
+        for reply in replies:
+            candidate = current + "\n\n" + reply.strip()
+            if len(candidate) > MAX_CHARS and current != header:
+                chunks.append(Chunk(
+                    text=current.strip(),
+                    source=doc.source,
+                    index=index,
+                    produced_by="chunker.py::split_documents",
+                ))
+                index += 1
+                current = header + "\n\n" + reply.strip()
+            else:
+                current = candidate
+
+        if current.strip():
+            chunks.append(Chunk(
+                text=current.strip(),
+                source=doc.source,
+                index=index,
+                produced_by="chunker.py::split_documents",
+            ))
+
+    return chunks
 
 
 def describe(chunks: list[Chunk]) -> str:
