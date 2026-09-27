@@ -319,23 +319,10 @@ Criteria 2, 4 and 5 were already at their strictest values and passed.
 
 ## Diagnoses
 
-<!-- For each miss: which stage caused it, and how. The stage alone isn't
-     enough — you need the mechanism.
-
-     Not a diagnosis: "Question 3 didn't work."
-     A diagnosis:     "Question 3 asks about laundry costs. The answer is in
-                       one sentence that got split across two chunks, so
-                       neither chunk on its own contains it."
-
-     The five stages: loading → chunking → embedding → retrieval → generation.
-
-     Look for a pattern. If three misses all ask about numbers, that's one
-     problem, not three.
-
-     Missed nothing? Say so, then say honestly whether your targets were set
-     low, and which one you'd tighten and to what.
-
-     Milestone 3. -->
+Missed nothing. All 5 were MET. No criterion failed, so there is no pipeline stage to diagnose. The
+finding is that the targets themselves were set too low — which is what
+the brief asks me to say when nothing misses. The Criteria 1
+and 3 are worth tighting from 4 of 5 to 5 of 5.
 
 ## The Improvement
 
