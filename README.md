@@ -295,22 +295,27 @@ All 3 preserve vote counts.
 
 ## Verdicts
 
-<!-- MET or MISSED for each of the five, against the target you wrote last
-     unit — not a new one. Plus a sentence on how you decided. That sentence
-     matters most where it was close.
-
-     If your target said 4 of 5 and your runs came out 4, 3, 4, that's a MISS.
-     The target has to hold, not show up occasionally.
-
-     Milestone 2. -->
-
 | # | Criterion | Verdict | How I decided |
 |---|---|---|---|
-| 1 |  |  |  |
-| 2 |  |  |  |
-| 3 |  |  |  |
-| 4 |  |  |  |
-| 5 |  |  |  |
+| 1 | Retrieved chunk contains the answer | MET | 5/5 in all three runs. Target was 4 of 5. |
+| 2 | Every answer names a source | MET | 15/15 answers named a thread file. Target was 5 of 5. |
+| 3 | Gate stops out-of-corpus questions | MET | 5/5 refused. Target was 4 of 5. |
+| 4 | Chunks keep the thread they belong to | MET | 5/5 sampled chunks start with `THREAD:`. Target was 5 of 5. |
+| 5 | Vote counts are preserved | MET | 3/3 sampled chunks keep `(N votes)`. Target was 3 of 3. |
+
+**On targets that were too safe:**
+
+All five criteria were MET on the first try, so my targets were safe
+rather than informative. Two are worth tightening:
+
+- **Criterion 1** (target 4 of 5, actual 5/5). A 4-of-5 target cannot
+  distinguish a working system from a mostly-working one. I would
+  tighten it to 5 of 5.
+- **Criterion 3** (target 4 of 5, actual 5/5, deterministic). The gap
+  between my worst in-scope distance (0.521) and best out-of-scope
+  distance (0.828) is 0.307 wide with no overlap. 5 of 5 is realistic.
+
+Criteria 2, 4 and 5 were already at their strictest values and passed.
 
 ## Diagnoses
 
