@@ -199,33 +199,99 @@ is already a natural boundary. The result went from 26 chunks (with a
 
 # Unit 2
 
-<!-- These sections get ADDED to what's already above. Don't delete or rewrite
-     unit 1 — the point is that someone can see what you said before you knew
-     how it went. -->
-
 ## Run Log — Before
 
-<!-- Your five criteria, three runs each. `python run_eval.py --label before`
-     runs the questions, puts the OUT_OF_SCOPE ones through the gate, and
-     writes it all into results/ for you. Targets come from criteria.md; the
-     verdict column is your call.
-
-     Criterion 3 is measured in one deterministic pass rather than three, so
-     the same number goes in all three run columns. That's correct, not lazy.
-
-     Milestone 1. -->
+Three runs per criterion, caching off. Produced by `run_eval.py::main`,
+stored in `results/run_2026-09-28_0341_before.md`.
 
 | Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
 |---|---|---|---|---|---|
-| 1. Retrieved chunk contains the answer | 4 of 5 |  |  |  |  |
-| 2. Every answer names a source | 5 of 5 |  |  |  |  |
-| 3. Gate stops out-of-corpus questions | 4 of 5 |  |  |  |  |
-| 4. | | | | | |
-| 5. | | | | | |
+| 1. Retrieved chunk contains the answer | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 2. Every answer names a source | 5 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 3. Gate stops out-of-corpus questions | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 4. Chunks keep the thread they belong to | 5 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 5. Vote counts are preserved | 3 of 3 | 3/3 | 3/3 | 3/3 | MET |
 
-<!-- Underneath, paste the REAL output for each criterion from one of your
-     runs — the actual text your system produced, not a description of it.
-     Name the file and function that produced it. -->
+Criteria 3 and 4 are deterministic, so the same number goes in all three
+columns. Criteria 1, 2 and 5 depend on the generated answer and were
+measured three times.
+
+### Real output
+
+**Criterion 1 — run 1 (laptop RAM):**
+
+> Question: How much RAM should a CS student's laptop have?
+> Best distance: 0.1978 (passed the gate)
+>
+> ```
+> A CS student's laptop should have 16GB of RAM. (Source: thread_laptop_specs.txt)
+> ```
+
+**Criterion 1 — run 1 (pass/fail deadline):**
+
+> Question: When is the deadline to declare pass/fail?
+> Best distance: 0.5211 (passed the gate)
+>
+> ```
+> You can declare the pass/fail option as late as week eight
+> (*thread_pass_fail.txt* and *thread_first_year_regret.txt*).
+> ```
+
+**Criterion 2 — run 1 (internship timing):**
+
+> Question: When should I start looking for a summer internship?
+> Best distance: 0.2623 (passed the gate)
+>
+> ```
+> You should start looking for a summer internship earlier than feels
+> reasonable, as large employers close their applications in October and
+> November for the following summer (*thread_internship_timing.txt*). If
+> you miss the autumn window, smaller and local places hire in February
+> and March (*thread_internship_timing.txt*).
+> ```
+
+**Criterion 3 — deterministic, one pass:**
+
+| Out-of-scope question | Best distance | Gate |
+|---|---|---|
+| What is the capital of Mongolia? | 0.948 | refused |
+| How do I change the oil in a diesel engine? | 0.930 | refused |
+| Who won the 1994 World Cup? | 0.952 | refused |
+| What is the recommended dosage of ibuprofen? | 0.828 | refused |
+| How do I write a for loop in Rust? | 0.871 | refused |
+
+Refused 5 of 5.
+
+**Criterion 4 — 5 sampled chunks:**
+
+```
+thread_changing_major.txt#0: starts with 'THREAD: How hard is it to change major in second year?'
+thread_group_project.txt#0: starts with 'THREAD: How do you handle a group project where someone disa...'
+thread_parking.txt#0: starts with 'THREAD: Worth getting a parking permit?'
+thread_printing.txt#0: starts with 'THREAD: Is the printing quota enough?'
+thread_commuting.txt#0: starts with 'THREAD: Commuting an hour each way — is it survivable?'
+```
+
+All 5 start with `THREAD:`.
+
+**Criterion 5 — 3 sampled chunks:**
+
+```
+thread_winter_advice.txt#0: 3 replies with vote counts
+   --- reply 1 (26 votes) ---
+   --- reply 2 (31 votes) ---
+   --- reply 3 (18 votes) ---
+thread_laptop_specs.txt#0: 3 replies with vote counts
+   --- reply 1 (31 votes) ---
+   --- reply 2 (18 votes) ---
+   --- reply 3 (12 votes) ---
+thread_laundry_timing.txt#0: 3 replies with vote counts
+   --- reply 1 (27 votes) ---
+   --- reply 2 (8 votes) ---
+   --- reply 3 (16 votes) ---
+```
+
+All 3 preserve vote counts.
 
 ## Verdicts
 
