@@ -369,17 +369,81 @@ there was already plenty of margin. 0.55 or 0.60 is the right place;
 
 ## What's Still Broken
 
-<!-- For each criterion still missed after your fix: what you'd do about it,
-     and why you stopped where you did.
+One criterion is still missed after the improvement: **criterion 2**
+(every answer names a source, target 5 of 5). At cutoff 0.50, the
+pass/fail question is refused by the gate, so only 4 of 5 answers name
+a source. 4 of 5 is below the 5-of-5 target.
 
-     "I ran out of time" is fine if it's true. Pretending nothing is left is
-     not.
+**Diagnosis.** The pipeline stage is **generation**, and the mechanism
+is that no generation happened at all. The gate refused the question
+before the model was called, so there is no answer and no source line
+to check. This is the gate doing exactly what it was told to do at
+cutoff 0.50 — the failure is not in the gate, it is in the cutoff I
+chose for the improvement.
 
-     Milestone 5. -->
+**Would I fix it?** Yes, by raising the cutoff back. The pass/fail
+question has a best distance of 0.5211 and the next-closest in-scope
+question is the winter footwear one at 0.4753. The cutoff needs to sit
+between those two numbers to keep every in-scope question through:
+anything above 0.5211 works, anything at or below it refuses pass/fail.
+0.55 and 0.60 both satisfy that, and 0.55 gives less margin to the
+out-of-scope side without buying anything. I would revert to 0.60.
+
+**Why I stopped where I did.** The improvement was deliberately chosen
+as a threshold probe, and the probe answered its question: 0.50 is the
+first value that costs an in-scope question. Reverting it in this unit
+would mean making a *second* change, which the brief forbids — the unit
+allows one change, and mine is the threshold. The revert belongs in the
+next unit, or as a described next step here.
 
 ## What I'd Do Differently
 
-<!-- Knowing what you know now — which of your five criteria would you write
-     differently, and why?
+Knowing what I know now, I would rewrite two of my five criteria and
+keep the other three.
 
-     Milestone 5. -->
+**Criterion 1 — raise from 4 of 5 to 5 of 5.**
+
+I set 4 of 5 to leave room for one hard question. Both the before run
+and the after run at 0.60 used none of that room: the before was 5/5
+and the after at 0.50 landed on exactly 4/5, which the 4-of-5 target
+still accepts. A target the system clears (or exactly hits) under two
+very different cutoffs is measuring whether the system is catastrophically
+broken, not whether it works. 5 of 5 would at least tell me when one
+question starts slipping.
+
+**Criterion 3 — raise from 4 of 5 to 5 of 5.**
+
+Same problem, weaker version. The gate is deterministic, and the gap
+between my worst in-scope distance (0.521) and best out-of-scope
+distance (0.828) is 0.307 wide with no overlap. There is no realistic
+setting inside that gap at which the gate refuses 4 of 5 but not 5 of 5.
+4 of 5 was safe; 5 of 5 would be honest.
+
+**Criterion 2 — keep at 5 of 5, but add the qualifier.**
+
+The interesting finding from this unit is that criterion 2 is not a
+statement about the generator — it is a joint statement about the gate
+and the generator. At cutoff 0.50 the gate refused a question, and the
+refusal names no source, so criterion 2 failed without the model ever
+being called. Next time I would write it as: "Every answer the system
+produces, including refusals, names a source document — refusals may
+cite the closest source they considered, or explicitly say none was
+close enough." That would measure what I actually care about, which is
+that no output leaves the system unattributed.
+
+**Criteria 4 and 5 — keep as written.**
+
+Both passed at every cutoff I tried, and both describe structural
+properties of the chunker rather than properties of the answer. They
+are the two criteria I would not change.
+
+**The improvement I would make next.**
+
+Not another threshold probe. The threshold result is already clear:
+0.50 is too strict, 0.55 and 0.60 are equivalent on this corpus. The
+next improvement I would make is one the earlier city_guides unit
+already suggested — a hybrid retrieval variant that can promote a chunk
+from outside the semantic top-20, because my current BM25 re-ranker can
+only reorder what semantic retrieval already returned. That is the one
+place where the retrieval stage, rather than the gate, could still move
+the numbers.
