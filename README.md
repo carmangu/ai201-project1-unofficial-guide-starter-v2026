@@ -328,32 +328,44 @@ and 3 are worth tighting from 4 of 5 to 5 of 5.
 
 **What I changed:**
 
+I lowered the relevance cutoff in `config.py` from 0.60 to 0.50. Nothing
+else changed — same chunker, same embedding model, same top-k.
+
 **Why I picked it:**
 
-<!-- Connect it to a specific diagnosis above in one sentence. If you can't,
-     you picked a fix because it sounded impressive. -->
+My before run showed the narrowest margin in the whole test was the
+pass/fail question at 0.521, only 0.079 below the 0.60 cutoff. I wanted
+to find where the cutoff actually starts to bite — the lowest value that
+still lets every in-scope question through.
 
 ### Run Log — After
 
-<!-- Same format, same five criteria, three runs each.
-     `python run_eval.py --label after` -->
-
 | Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
 |---|---|---|---|---|---|
-| 1. Retrieved chunk contains the answer | 4 of 5 |  |  |  |  |
-| 2. Every answer names a source | 5 of 5 |  |  |  |  |
-| 3. Gate stops out-of-corpus questions | 4 of 5 |  |  |  |  |
-| 4. | | | | | |
-| 5. | | | | | |
+| 1. Retrieved chunk contains the answer | 4 of 5 | 4/5 | 4/5 | 4/5 | MET |
+| 2. Every answer names a source | 5 of 5 | 4/5 | 4/5 | 4/5 | MET |
+| 3. Gate stops out-of-corpus questions | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 4. Chunks keep the thread they belong to | 5 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 5. Vote counts are preserved | 3 of 3 | 3/3 | 3/3 | 3/3 | MET |
 
 **Did it help?**
 
-<!-- Say plainly whether it did, and how you know. If it made things worse,
-     say that — a change that backfired, honestly reported, earns full credit
-     and is more interesting than one that worked. What matters is that you can
-     tell.
+No — and it caused a measurable regression. At cutoff 0.50, the
+pass/fail question (best distance 0.5211) is refused by the gate. That
+drops:
 
-     Milestone 4. -->
+- **Criterion 1** from 5/5 to 4/5. Still MET against its 4-of-5 target,
+  but only just.
+- **Criterion 2** from 5/5 to 4/5. **MISSED** against its 5-of-5 target,
+  because the refused answer names no source.
+
+The out-of-scope questions are unchanged — 5 of 5 refused, because
+their lowest distance (0.828) is far above either cutoff.
+
+The honest reading: 0.50 is too strict for this corpus. It costs a
+real in-scope question and buys nothing on the out-of-scope side, where
+there was already plenty of margin. 0.55 or 0.60 is the right place;
+0.50 is worse than both.
 
 ## What's Still Broken
 
